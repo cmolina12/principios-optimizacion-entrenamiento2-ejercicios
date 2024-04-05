@@ -85,7 +85,7 @@ cultivos_fertilizantes = { "Hortalizas": [ "Hortifarm", "VeggieForce", "AgroAN",
 
     # Parametros
 
-utilidad_f_c = { ("Hortifarm","Hortalizas"): 9000, ("VeggieForce","Hortalizas"): 8500, ("AgroAN","Hortalizas"): 7800, ("Vegetalis","Hortalizas"): 7000, ("HortiCrop","Hortalizas"): 6500, ("Germifruit","Frutales"): 12000, ("ForceFruit","Frutales"): 11500, ("Lombriliq","Frutales"): 10000, ("FertiMaiz","Cereales"): 9500, ("CytoSeed","Cereales"): 8000, ("ReBound","Cereales"): 7500, ("ArrozMax","Cereales"): 7000, ("LegumiPro","Leguminosas"): 8800, ("FertiFrijol","Leguminosas"): 8300, ("LenteSeed","Leguminosas"): 7900, ("NitroFert","Leguminosas"): 9200, ("FertiGrape","Viñedos"): 11000, ("VinoVital","Viñedos"): 10500, ("GrapeMax","Viñedos"): 10000, ("FertiUva","Viñedos"): 8500 } #La utilidad de cada fertilizante esta indexada por el tipo de cultivo para facilitar asi la creacion de la funcion objetivo
+utilidad_f_c = { ("Hortifarm","Hortalizas"): 282550, ("VeggieForce","Hortalizas"): 154031, ("AgroAN","Hortalizas"): 172872, ("Vegetalis","Hortalizas"): 207622, ("HortiCrop","Hortalizas"): 275224, ("Germifruit","Frutales"): 193037, ("ForceFruit","Frutales"): 194390, ("Lombriliq","Frutales"): 166213, ("FertiMaiz","Cereales"): 226411, ("CytoSeed","Cereales"): 203706, ("ReBound","Cereales"): 135871, ("ArrozMax","Cereales"): 155161, ("LegumiPro","Leguminosas"): 143372, ("FertiFrijol","Leguminosas"): 191781, ("LenteSeed","Leguminosas"): 153203, ("NitroFert","Leguminosas"): 179566, ("FertiGrape","Viñedos"): 206560, ("VinoVital","Viñedos"): 171597, ("GrapeMax","Viñedos"): 68985, ("FertiUva","Viñedos"): 291592 } #La utilidad de cada fertilizante esta indexada por el tipo de cultivo para facilitar asi la creacion de la funcion objetivo
 m = 8 # Número máximo de fertilizantes a ofrecer, constante
 
     # Variables de decisión
@@ -165,7 +165,7 @@ print("-"*95)
 # Imprimir el DataFrame con tabulate
 print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False, numalign="center"))
 
-print(f"\nUtilidad Total: {utilidad_total} COP") # Imprimir la utilidad total
+print(f"\nUtilidad Total: {utilidad_total} COP\n") # Imprimir la utilidad total
 
 #Graficas
 
