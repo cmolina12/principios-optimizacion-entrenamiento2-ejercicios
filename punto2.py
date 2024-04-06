@@ -223,7 +223,7 @@ modelo += lp.lpSum(y[f]*C[f] for f in fincas) <= A #Monto máximo de adecuación
 
     #Función objetivo
     
-modelo += lp.lpSum(y[f]*C[f] for f in fincas) + lp.lpSum(x[f, t]*R[t] for f in fincas for t in camiones) + lp.lpSum(x[f, t]*D[f]*G[t]*Gp for f in fincas for t in camiones)/1000000 #Se minimiza el costo total asociado con la operación de recolección de cacao, en este caso, vemos en orden de izquierda a derecha el costo de adecuación de cada finca, el costo de alquiler de los camiones utilizados para transportar el cacao y los costos de combustible asociados con la distancia recorrida por cada tipo de camión
+modelo += lp.lpSum(x[f, t]*R[t] for f in fincas for t in camiones) + Gp*(lp.lpSum((G[t]*lp.lpSum(x[f,t]*D[f] for f in fincas))for t in camiones)/1000000) #Se minimiza el costo total asociado con la operación de recolección de cacao, en este caso, vemos en orden de izquierda a derecha el costo de alquiler de los camiones utilizados para transportar el cacao y los costos de combustible asociados con la distancia recorrida por cada tipo de camión
 
     #Resolución del modelo
     
