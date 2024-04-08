@@ -75,13 +75,13 @@ import pulp as lp # Importar la librería pulp
 
     #Conjuntos
 
-H = [1, 2, 3, 4, 5, 6, 7, 8, 9] # Franjas horarias
-B = [1, 2, 3, 4, 5] # Bandas
-P = ["Green Logistics", "OptiProcesa", "OptiChain", "LogiTech", "UniBand", "SmartFactory", "EcoMach", "ProOptiPlan", "Ingenium Tech", "EcolnnovaPro", "LogiStream", "OptiSupply", "Green Production"] # Proyectos
 
+H = [h for h in range(1,10)] # Franjas horarias
+B = [b for b in range(1,6)] # Bandas
+P = ["Green Logistics", "OptiProcesa", "OptiChain", "LogiTech", "UniBand", "SmartFactory", "EcoMach", "ProOptiPlan", "Ingenium Tech", "EcolnnovaPro", "LogiStream", "OptiSupply", "Green Production"] # Proyectos
     #Parámetros
     
-di = {
+d = {
     "Green Logistics": 2,
     "OptiProcesa": 2,
     "OptiChain": 4,
@@ -109,13 +109,14 @@ ahb = {
     9: {1: 1, 2: 0, 3: 1, 4: 1, 5: 1},
 } # Disponibilidad en la franja horaria h de la banda b, donde 1 significa disponible y 0 no disponible.
 
-M = 9 # Máximo número de horas
+k = 1
+m = len(H)
 
     #Variables de decisión
     
-y = lp.LpVariable.dicts("yi", ((p, h, b) for p in P for h in H for b in B), cat=lp.LpBinary) # Variable binaria que indica si el proyecto i usa la banda b durante la franja horaria h (1 si se usa y 0 en caso contrario)
-x = lp.LpVariable.dicts("xi", ((p, h, b) for p in P for h in H for b in B), cat=lp.LpBinary) # Variable binaria que indica si el proyecto i inicia en la banda b durante la franja horaria h.
-z = lp.LpVariable("z", cat=lp.LpContinuous) # Máxima hora de finalización de cualquiera de los proyectos
+x = {(i,h,b): lp.LpVariable(f"x_{i}_{h}_{b}", 0, None, lp.LpBinary) for i in P for h in H for b in B}
+y = {(i,h,b): lp.LpVariable(f"y_{i}_{h}_{b}", 0, None, lp.LpBinary) for i in P for h in H for b in B}
+z = lp.LpVariable("z", 0, None, lp.LpContinuous) # Máxima hora de finalización de cualquiera de los proyectos        
 
     #Restricciones
     
@@ -126,20 +127,19 @@ model = lp.LpProblem("Proyecto", lp.LpMinimize) # Se crea el modelo
 for i in P: # Para cada proyecto i
     for h in H: # Para cada franja horaria h
         for b in B:  # Para cada banda b
-            if  h + di[i] - 1 <= M: # Si la suma de h y di[i] - 1 es menor o igual a M
-                model += lp.lpSum(y[i, j, b] for j in range(h, h + di[i])) >= di[i] * x[i, h, b]
+            if  h + d[i] - 1 <= m: # Si la suma de h y di[i] - 1 es menor o igual a M
+                model += lp.lpSum(y[i, j, b] for j in range(h, h + d[i])) >= d[i] * x[i, h, b]
                 
                     
 # Restricción ii. La experimentación de cada proyecto de grado debe ser en una sola banda
 
 for i in P: # Para cada proyecto i
-    for h in H: # Para cada franja horaria h
-        model += lp.lpSum(x[i, h, b] for b in B) == 1 # La suma de xi,h,b para cada b en B es igual a 1
+        model += lp.lpSum(x[i, h, b] for b in B for h in H) == 1 # La suma de xi,h,b para cada b en B es igual a 1
         
 # Restricción iii. La experimentación debe durar la cantidad de horas requeridas para cada proyecto
 
 for i in P: # Para cada proyecto i
-    model += lp.lpSum(y[i, h, b] for h in H for b in B) == di[i] # La suma de yi,h,b para cada h en H y b en B es igual a di[i]
+    model += lp.lpSum(y[i, h, b] for h in H for b in B) == d[i] # La suma de yi,h,b para cada h en H y b en B es igual a di[i]
     
 # Restricción iv. Garantizar que cada proyecto inicie una sola vez
 
@@ -151,33 +151,35 @@ for i in P: # Para cada proyecto i
 for i in P: # Para cada proyecto i
     for h in H: # Para cada franja horaria h
         for b in B: # Para cada banda b
-            if h + di[i] - 1 > M: # Si la suma de h y di[i] - 1 es mayor a M
+            if h + d[i] - 1 > m: # Si la suma de h y di[i] - 1 es mayor a M
                 model += x[i, h, b] == 0 # xi,h,b es igual a 0
 
 # Restricción vi. Máximo momento de finalización del proyecto
 
 for i in P: # Para cada proyecto i
-    lp.lpSum(x[i, h, b] * (h + di[i] - 1) for h in H for b in B) <= z # La suma de xi,h,b * (h + di[i] - 1) para cada h en H y b en B es menor o igual a z
-    
+        for b in B:
+                model += lp.lpSum(x[i, h, b] * (h + d[i] - 1) for h in H if h + d[i] - 1 <= m) <= z # La suma de xi,h,b por h en H es menor o igual a z
+#for i in P:
+#    m += lp.lpSum(x[i,h,b]*(h+d[i]-1) for h in H for b in B) <= z
 # Restricción vii. Garantizar el máximo de proyectos en una franja horaria en una banda
 
 for h in H: # Para cada franja horaria h
     for b in B: # Para cada banda b
-        model += lp.lpSum(y[i, h, b] for i in P) <= 1 # La suma de yi,h,b para cada i en P es menor o igual a 1
+        model += lp.lpSum(y[i, h, b] for i in P) <= k # La suma de yi,h,b para cada i en P es menor o igual a 1
         
 # Restricción viii. Asegurar que los proyectos solo se asignen a bandas disponibles
 
-#for i in P: # Para cada proyecto i
- #   for h in H: # Para cada franja horaria h
-  #      for b in B: # Para cada banda b
-   #         model += x[i, h, b] <= ahb[h][b] # xi,h,b es menor o igual a ah[h][b]
+for i in P: # Para cada proyecto i
+    for h in H: # Para cada franja horaria h
+        for b in B: # Para cada banda b
+            model += x[i, h, b] <= ahb[h][b] # xi,h,b es menor o igual a ah[h][b]
             
 # Restricción ix. Asegurar que un proyecto no se pueda cumplir si llega a una banda que no esté disponible
 
-#for i in P: # Para cada proyecto i
- #   for h in H: # Para cada franja horaria h
-  #      for b in B: # Para cada banda b
-   #         model += y[i, h, b] <= ahb[h][b] # yi,h,b es menor o igual a ah[h][b]
+for i in P: # Para cada proyecto i
+   for h in H: # Para cada franja horaria h
+        for b in B: # Para cada banda b
+            model += y[i, h, b] <= ahb[h][b] # yi,h,b es menor o igual a ah[h][b]
 
     # Función objetivo
 
@@ -210,4 +212,53 @@ for i in P: # Para cada proyecto i
                 df.loc[h, b] = i # Se coloca el nombre del proyecto en la celda correspondiente
             if lp.value(y[i, h, b]) == 1:
                 df.loc[h, b] = i # Se coloca el nombre del proyecto en la celda correspondiente
-print(df)
+                
+# Reemplazar las celdas con 'X' si ahb indica que la banda no se puede usar
+for h in H:
+    for b in B:
+        if ahb[h][b] == 0:
+            df.loc[h, b] = 'X'
+
+
+from tabulate import tabulate # Importar la función tabulate
+ 
+print(tabulate(df, headers='keys', tablefmt='pipe', showindex=True, )) # Se imprime el DataFrame como una tabla
+
+print("Valor de la función objetivo:", lp.value(model.objective)) # Se imprime el valor de la función objetivo
+
+#Graficar 
+
+import matplotlib.pyplot as plt # Importar la librería matplotlib
+import numpy as np # Importar la librería numpy
+
+#Primero hacemos una lista con los proyectos y las franjas horarias donde se ejecutan
+
+resultados = {i: [] for i in P} # Se crea un diccionario con listas vacías para cada proyecto
+
+#Para cada proyecto queremos agregar la banda donde esta y la franja horaria donde inicia y termina
+
+for i in P: # Para cada proyecto i
+    for h in H: # Para cada franja horaria h
+        for b in B: # Para cada banda b
+            if lp.value(x[i, h, b]) == 1:
+                resultados[i] = {"banda": b, "inicio": h, "fin": d[i]+h-1} # Se agrega la banda y la franja horaria de inicio y fin al diccionario del proyecto i
+                
+colores = {"Green Logistics": "red", "OptiProcesa": "blue", "OptiChain": "green", "LogiTech": "purple", "UniBand": "orange", "SmartFactory": "brown", "EcoMach": "pink", "ProOptiPlan": "gray", "Ingenium Tech": "olive", "EcolnnovaPro": "cyan", "LogiStream": "magenta", "OptiSupply": "yellow", "Green Production": "black"} # Colores para cada proyecto
+
+# Resto del código...
+
+fig, ax = plt.subplots() # Se crea la figura
+
+for i in P: # Para cada proyecto i
+    ax.bar(resultados[i]["banda"], d[i], bottom=resultados[i]["inicio"], color=colores[i]) # Se grafica el proyecto i
+
+ax.set_xticks(np.arange(1, 6)) # Se establecen las marcas en el eje x
+ax.set_xticklabels(B) # Se establecen las etiquetas en el eje x
+ax.set_yticks(np.arange(1, 11))  # Agregar marcas en el eje y para todas las franjas horarias
+yticklabels = [str(i) if i != 10 else "" for i in range(1, 11)] # Crear una lista de etiquetas para las marcas en el eje y
+ax.set_yticklabels(yticklabels)  # Establecer las etiquetas de las marcas en el eje y
+ax.set_ylabel("Franjas horarias") # Se establece la etiqueta del eje y
+ax.set_xlabel("Bandas") # Se establece la etiqueta del eje x
+ax.set_title("Diagrama de Gantt") # Se establece el título
+ax.invert_yaxis() # Se invierte el eje y
+plt.show() # Se muestra la figura
