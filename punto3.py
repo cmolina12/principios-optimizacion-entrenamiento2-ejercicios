@@ -222,7 +222,7 @@ for h in H:
 
 from tabulate import tabulate # Importar la función tabulate
  
-print(tabulate(df, headers='keys', tablefmt='pipe', showindex=True, )) # Se imprime el DataFrame como una tabla
+print(tabulate(df, headers='keys', tablefmt='pipe', showindex=True)) # Se imprime el DataFrame como una tabla
 
 print("Valor de la función objetivo:", lp.value(model.objective)) # Se imprime el valor de la función objetivo
 
