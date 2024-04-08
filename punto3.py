@@ -275,7 +275,7 @@ colores_oscuros = [cmap(i) for i in np.linspace(0, 1, len(P))]
 # Crear un diccionario de colores para cada proyecto
 colores = {proyecto: color for proyecto, color in zip(P, colores_oscuros)}
 
-fig, axs = plt.subplots(1, len(B), figsize=(10, 10)) # Se crea una figura con un subgráfico para cada banda
+fig, axs = plt.subplots(1, len(B), figsize=(20, 10)) # Se crea una figura con un subgráfico para cada banda
 fig.subplots_adjust(bottom= 0.2, wspace = 0.5) # Se ajusta la posición de los subgráficos
 fig.suptitle("Programación - Bandas Transportadoras", fontsize=16, fontweight='bold') # Se agrega un título a la figura
 
@@ -288,10 +288,11 @@ for b in B: # Para cada banda b
             bar = ax.bar(resultados[i]["banda"], d[i], bottom=resultados[i]["inicio"], color=colores[i], width=0.5) # Se grafica el proyecto i en el subgráfico de la banda b con una anchura de 0.5
             handles.append(bar) # Se agrega el manejador de la barra a la lista de manejadores
             labels.append(i) # Se agrega el nombre del proyecto a la lista de etiquetas
-    ax.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.20)) # Se muestra la leyenda en la parte inferior del subgráfico de la banda b
+    ax.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.25)) # Se muestra la leyenda en la parte inferior del subgráfico de la banda b
 
     ax.set_xticks([b]) # Se establece la marca en el eje x para la banda b
-    ax.set_xticklabels([b]) # Se establece la etiqueta en el eje x para la banda b
+    ax.set_xticklabels([f"Banda {b}"]) # Se establece la etiqueta en el eje x para la banda b
+    ax.xaxis.tick_top() # Se eliminan las marcas en el eje x
     ax.set_yticks(np.arange(1, 11))  # Agregar marcas en el eje y para todas las franjas horarias
     yticklabels = [str(i) if i != 10 else "" for i in range(1, 11)] # Crear una lista de etiquetas para las marcas en el eje y
     ax.set_yticklabels(yticklabels)  # Establecer las etiquetas de las marcas en el eje y
