@@ -244,7 +244,7 @@ from tabulate import tabulate # Importamos la función tabulate de la librería 
 df = pd.DataFrame(columns=['Finca', 'Costo Total (Millones de COP)', 'Seleccionada', 'Viajes Grande', 'Viajes Mediano', 'Viajes Pequeño', 'Cacao Recogido (kg)', 'Capacidad finca (kg)', 'Distancia (km)']) #Creamos un DataFrame con las columnas Finca, Costo Total (COP), Seleccionada, Viajes Grande, Viajes Mediano, Viajes Pequeño, Cacao Recogido (kg), Capacidad finca (kg) y Distancia (km)
 
 for f in fincas: #Para cada finca f
-    costo_total = lp.value(y[f]*C[f] + lp.lpSum(x[f, t].varValue*R[t] for t in camiones) + lp.lpSum(x[f, t].varValue*D[f]*G[t]*Gp for t in camiones)/1000000) #Costo total de transporte de cacao para la finca f
+    costo_total = lp.value(lp.lpSum(x[f, t].varValue*R[t] for t in camiones) + lp.lpSum(x[f, t].varValue*D[f]*G[t]*Gp for t in camiones)/1000000) #Costo total de transporte de cacao para la finca f
     cacao_recogido = lp.value(lp.lpSum(x[f, t].varValue*Q[t] for t in camiones)) #Cantidad de cacao recogida de la finca f
     df.loc[len(df)] = [f, costo_total, "Si" if y[f].varValue == 1 else "No", x[f, 'Grande'].varValue, x[f, 'Mediano'].varValue, x[f, 'Pequeño'].varValue, cacao_recogido, P[f], D[f]] #Agregamos una fila al DataFrame con la información de la finca f
 
