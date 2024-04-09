@@ -197,8 +197,8 @@ for i in P: # Para cada proyecto i
     for h in H: # Para cada franja horaria h
         for b in B: # Para cada banda b
             if lp.value(x[i, h, b]) == 1:
-                print(f"El proyecto {i} inicia en la banda {b} en la franja horaria {h}:", lp.value(x[i, h, b]))
-                
+                print(f"El proyecto {i} inicia en la banda {b} en la franja horaria {h}: y termina en la franja horaria {h + d[i] - 1}")
+
 #Reflejar los resultados en una tabla para poder ver los errores, la idea es que se marque con el nombre la franja horaria y la banda donde hay un proyecto, osea hazemos una tabla 5 x 9 para ir marcando los proyectos en las franjas horarias y bandas
 
 import pandas as pd # Importar la librería pandas
@@ -223,7 +223,7 @@ for h in H:
 from tabulate import tabulate # Importar la función tabulate
  
 print(tabulate(df, headers='keys', tablefmt='pipe', showindex=True)) # Se imprime el DataFrame como una tabla
-
+print("Nota: Las bandas que no se pueden usar están marcadas con 'X'") # Se imprime una nota
 print("Valor de la función objetivo:", lp.value(model.objective)) # Se imprime el valor de la función objetivo
 
 #Graficar 
