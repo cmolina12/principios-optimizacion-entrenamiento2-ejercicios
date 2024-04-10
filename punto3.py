@@ -197,7 +197,7 @@ for i in P: # Para cada proyecto i
     for h in H: # Para cada franja horaria h
         for b in B: # Para cada banda b
             if lp.value(x[i, h, b]) == 1:
-                print(f"El proyecto {i} inicia en la banda {b} en la franja horaria {h}: y termina en la franja horaria {h + d[i] - 1}")
+                print(f"El proyecto {i} inicia en la banda {b} en la franja horaria {h} y termina en la franja horaria {h + d[i] - 1}")
 
 #Reflejar los resultados en una tabla para poder ver los errores, la idea es que se marque con el nombre la franja horaria y la banda donde hay un proyecto, osea hazemos una tabla 5 x 9 para ir marcando los proyectos en las franjas horarias y bandas
 
@@ -227,31 +227,6 @@ print("Nota: Las bandas que no se pueden usar están marcadas con 'X'") # Se imp
 print("Valor de la función objetivo:", lp.value(model.objective)) # Se imprime el valor de la función objetivo
 
 #Graficar 
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-resultados = {i: [] for i in P} # Se crea un diccionario con listas vacías para cada proyecto
-
-#Para cada proyecto queremos agregar la banda donde esta y la franja horaria donde inicia y termina
-
-for i in P: # Para cada proyecto i
-    for h in H: # Para cada franja horaria h
-        for b in B: # Para cada banda b
-            if lp.value(x[i, h, b]) == 1:
-                resultados[i] = {"banda": b, "inicio": h, "fin": d[i]+h-1} # Se agrega la banda y la franja horaria de inicio y fin al diccionario del proyecto i
-
-# Obtener el mapa de colores 'tab20'
-cmap = plt.get_cmap('tab20b')
-
-# Crear una lista de colores oscuros
-colores_oscuros = [cmap(i) for i in np.linspace(0, 1, len(P))]
-
-# Crear un diccionario de colores para cada proyecto
-colores = {proyecto: color for proyecto, color in zip(P, colores_oscuros)}
-
-fig, axs = plt.subplots(1, len(B), figsize=(10, 10)) # Se crea una figura con un subgráfico para cada banda
-fig.suptitle("Programación - Bandas Transportadoras", fontsize=16, fontweight='bold') # Se agrega un título a la figura
 
 import matplotlib.pyplot as plt
 import numpy as np
