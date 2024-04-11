@@ -153,8 +153,8 @@ def busqueda_local(coord_ini: tuple, lbd: float):
     
 
 ### TODO: coordenadas iniciales y distancia del radar cuadrado de búsqueda (lbd) 
-coor_inicial = (-6.0, 2.0)
-lbd = 0.5
+coor_inicial = (0.0,-6.0)
+lbd = 0.01
 
 ### TODO: invocar el método de búsqueda local
 steps = busqueda_local(coor_inicial, lbd)
