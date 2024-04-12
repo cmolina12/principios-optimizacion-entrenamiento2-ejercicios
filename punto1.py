@@ -111,8 +111,7 @@ problema += x["FertiGrape","Viñedos"] + x["VinoVital","Viñedos"] + x["GrapeMax
 
 # Restricción iv - Se deben ofrecer máximo tres fertilizantes para el cultivo de hortalizas.
 
-for f in cultivos_fertilizantes["Hortalizas"]: # Para cada fertilizante de hortalizas
-    problema += x[f,"Hortalizas"] <= 3, f"Restricción_iv_{f}" # Se deben ofrecer máximo tres fertilizantes para el cultivo de hortalizas
+problema += lp.lpSum(x[f,"Hortalizas"] for f in cultivos_fertilizantes["Hortalizas"]) <= 3, f"Restricción_iv_Hortalizas" # Se deben ofrecer máximo tres fertilizantes para el cultivo de hortalizas
     
 # Restricción v - Si se ofrece NitroFert entonces no se debe ofrecer VeggieForce (y viceversa).
 
