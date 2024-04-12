@@ -42,7 +42,7 @@ x+y6
 def evaluar_indice(coordenada: tuple):
     x, y = coordenada
     # Usamos la fórmula proporcionada para calcular el índice
-    indice = 100 * ((x*y-11)**2 + 100* (x*y-7)**2)
+    indice = 100 * ((x**2)+y-11)**(2) + 100 * (x+(y**2)-7)**(2)
     return indice
 
 
