@@ -74,7 +74,7 @@ def generar_radar (coordenada: tuple, lbd: float):
 def evaluar_factibilidad(coordenada: tuple):
     x, y = coordenada
     # Evaluamos las restricciones
-    if x >= -6 and x <= 6 and y >= -6 and y <= 6 and x + y <= 6:
+    if x >= -6 and x <= 6 and y >= -6 and y <= 6 and x + y >= -6:
         return True
     else:
         return False

@@ -242,7 +242,7 @@ for i in P: # Para cada proyecto i
                 resultados[i] = {"banda": b, "inicio": h, "fin": d[i]+h-1} # Se agrega la banda y la franja horaria de inicio y fin al diccionario del proyecto i
 
 # Obtener el mapa de colores 'tab20'
-cmap = plt.get_cmap('tab20b')
+cmap = plt.get_cmap('tab20')
 
 # Crear una lista de colores oscuros
 colores_oscuros = [cmap(i) for i in np.linspace(0, 1, len(P))]
@@ -263,8 +263,8 @@ for b in B: # Para cada banda b
             bar = ax.bar(resultados[i]["banda"], d[i], bottom=resultados[i]["inicio"], color=colores[i], width=0.5) # Se grafica el proyecto i en el subgráfico de la banda b con una anchura de 0.5
             handles.append(bar) # Se agrega el manejador de la barra a la lista de manejadores
             labels.append(i) # Se agrega el nombre del proyecto a la lista de etiquetas
+        
     ax.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.25)) # Se muestra la leyenda en la parte inferior del subgráfico de la banda b
-
     ax.set_xticks([b]) # Se establece la marca en el eje x para la banda b
     ax.set_xticklabels([f"Banda {b}"]) # Se establece la etiqueta en el eje x para la banda b
     ax.xaxis.tick_top() # Se eliminan las marcas en el eje x
@@ -273,4 +273,5 @@ for b in B: # Para cada banda b
     ax.set_yticklabels(yticklabels)  # Establecer las etiquetas de las marcas en el eje y
     ax.invert_yaxis() # Invertir el eje y
     ax.set_ylabel("Franjas horarias") # Se establece la etiqueta del eje y
+
 plt.show()
