@@ -1,74 +1,5 @@
 
 
-"""Datos de los Fertilizantes con Tipo de Cultivo
-
-Fertilizante	Tipo de Cultivo	Utilidad (COP)
-Hortifarm	Hortalizas	9,000
-VeggieForce	Hortalizas	8,500
-AgroAN	Hortalizas	7,800
-Vegetalis	Hortalizas	7,000
-HortiCrop	Hortalizas	6,500
-Germifruit	Frutales	12,000
-ForceFruit	Frutales	11,500
-Lombriliq	Frutales	10,000
-FertiMaiz	Cereales	9,500
-CytoSeed	Cereales	8,000
-ReBound	Cereales	7,500
-ArrozMax	Cereales	7,000
-LegumiPro	Leguminosas	8,800
-FertiFrijol	Leguminosas	8,300
-LenteSeed	Leguminosas	7,900
-NitroFert	Leguminosas	9,200
-FertiGrape	Viñedos	11,000
-VinoVital	Viñedos	10,500
-GrapeMax	Viñedos	10,000
-FertiUva	Viñedos	8,500
-Restricciones y Condiciones:
-
-Se debe ofrecer al menos un fertilizante para cada tipo de cultivo: hortalizas, frutales, cereales, leguminosas, y viñedos.
-Si se ofrece LegumiPro, no se pueden ofrecer LenteSeed ni FertiFrijol.
-Se deben ofrecer al menos dos fertilizantes para viñedos.
-No se pueden ofrecer más de tres fertilizantes para hortalizas.
-Si se ofrece NitroFert, no se puede ofrecer VeggieForce.
-Si se ofrece ReBound, se debe ofrecer ArrozMax. Si se ofrece FertiUva, no se pueden ofrecer ReBound ni ArrozMax.
-Si se ofrece CytoSeed, se debe ofrecer al menos otro fertilizante para cereales.
-Se debe ofrecer GrapeMax o Lombriliq. i) Conjuntos
-
-C: Tipos de Cultivos = [“Hortalizas”, “Frutales”, “Cereales”, “Leguminosas”, “Viñedos”]  
-F : Fertilizantes = ["Hortifarm", "VeggieForce", "AgroAN", … , "FertiUva"]
-Subconjuntos de Fertilizantes por Tipo de Cultivo: 
-F_hortalizas = ["Hortifarm", "VeggieForce", "AgroAN", "Vegetalis", "HortiCrop"]
-F_frutales = ["Germifruit", "ForceFruit", "Lombriliq"]
-F_cereales = ["FertiMaiz", "CytoSeed", "ReBound", "ArrozMax"]
-F_leguminosas = ["LegumiPro", "FertiFrijol", "LenteSeed", "NitroFert"]
-F_viñedos = ["FertiGrape", "VinoVital", "GrapeMax", "FertiUva"]
-
-
-ii) Parámetros
-
-uf: Utilidad del fertilizante f perteneciente a F
-m : Número máximo de fertilizantes a ofrecer, el valor es 8.
-
-iii) Variables de decisión
-
-xf,c: Variable binaria donde xf,c= 1 si se ofrece el fertilizante f para el tipo de cultivo c, y xf,c= 0 en caso contrario 
-
-iv) Restricciones
-
-Restricción i. "Se debe ofrecer al menos un fertilizante para cada tipo de cultivo."
-f  FCxf,c1, c  C
-Restricción ii. "Se debe ofrecer al menos un fertilizante para cultivos de leguminosas entre LegumiPro, LenteSeed o FertiFrijol. Sin embargo, si se ofrece LegumiPro, no se puede ofrecer ni LenteSeed, ni FertiFrijol."
-
-Restricción iii. "Se deben ofrecer al menos dos fertilizantes entre FertiGrape, VinoVital y GrapeMax."
-
-Restricción iv. "Se deben ofrecer máximo tres fertilizantes para el cultivo de hortalizas."
-Restricción v. "Si se ofrece NitroFert entonces no se debe ofrecer VeggieForce (y viceversa)."
-Restricción vi. "Si se ofrece ReBound y ArrozMax entonces se debe ofrecer FertiUva."
-Restricción vii. "Si se ofrece CytoSeed, es necesario ofrecer también ForceFruit o Germifruit (o ambos)."
-Restricción viii. "Se debe ofrecer al menos uno entre GrapeMax o Lombriliq (o ambos)."
-"""
-
-
 import pulp as lp # Importar la librería PuLP
 
 # Crear un problema de maximización
@@ -193,7 +124,7 @@ colores_cultivos = {
 }
 
 # Crear una lista de colores para cada fertilizante seleccionado
-colores = [colores_cultivos[c] for c in cultivos for f in fertilizantes_seleccionados if f in cultivos_fertilizantes[c]] #
+colores = [colores_cultivos[c] for c in cultivos for f in fertilizantes_seleccionados if f in cultivos_fertilizantes[c]]
 
 # Ordenar las listas de fertilizantes, utilidades y colores de mayor a menor utilidad
 indices_ordenados = sorted(range(len(utilidades_seleccionadas)), key=lambda k: utilidades_seleccionadas[k], reverse=True) # Obtener los índices ordenados de mayor a menor utilidad
