@@ -179,6 +179,9 @@ fig, axs = plt.subplots(1, len(B), figsize=(20, 15)) # Se crea una figura con un
 fig.subplots_adjust(bottom= 0.2, wspace = 0.5) # Se ajusta la posición de los subgráficos
 fig.suptitle("Programación - Bandas Transportadoras", fontsize=16, fontweight='bold') # Se agrega un título a la figura
 
+# Cambiar el color de fondo de la figura
+fig.set_facecolor('lightgray')
+
 for b in B: # Para cada banda b
     ax = axs[b-1] # Se selecciona el subgráfico correspondiente a la banda b
     handles = [] # Se crea una lista vacía para los manejadores de las leyendas
@@ -188,13 +191,13 @@ for b in B: # Para cada banda b
             bar = ax.bar(resultados[i]["banda"], d[i], bottom=resultados[i]["inicio"], color=colores[i], width=0.5) # Se grafica el proyecto i en el subgráfico de la banda b con una anchura de 0.5
             handles.append(bar) # Se agrega el manejador de la barra a la lista de manejadores
             labels.append(i) # Se agrega el nombre del proyecto a la lista de etiquetas
-        
+
     ax.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.25)) # Se muestra la leyenda en la parte inferior del subgráfico de la banda b
     ax.set_xticks([b]) # Se establece la marca en el eje x para la banda b
     ax.set_xticklabels([f"Banda {b}"]) # Se establece la etiqueta en el eje x para la banda b
     ax.xaxis.tick_top() # Se eliminan las marcas en el eje x
-    ax.set_yticks(np.arange(1, 11))  # Agregar marcas en el eje y para todas las franjas horarias
-    yticklabels = [str(i) if i != 10 else "" for i in range(1, 11)] # Crear una lista de etiquetas para las marcas en el eje y
+    ax.set_yticks(np.arange(0, 11))  # Agregar marcas en el eje y para todas las franjas horarias, incluyendo un espacio antes de la primera
+    yticklabels = [""] + [str(i) for i in range(1, 10)] + [""] # Crear una lista de etiquetas para las marcas en el eje y, incluyendo un espacio antes de la primera y eliminando el '10'
     ax.set_yticklabels(yticklabels)  # Establecer las etiquetas de las marcas en el eje y
     ax.invert_yaxis() # Invertir el eje y
     ax.set_ylabel("Franjas horarias") # Se establece la etiqueta del eje y
