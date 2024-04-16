@@ -154,58 +154,57 @@ print("Nota: Las bandas que no se pueden usar están marcadas con 'X'") # Se imp
 print("Valor de la función objetivo:", lp.value(model.objective)) # Se imprime el valor de la función objetivo
 
 #Graficar 
-
-import matplotlib.pyplot as plt # Importar la librería matplotlib.pyplot
 import numpy as np # Importar la librería numpy
+import matplotlib.pyplot as plt # Importar la librería matplotlib.pyplot
 
-resultados = {i: [] for i in P} # Se crea un diccionario con listas vacías para cada proyecto
+resultados_proyectos = {proyecto: [] for proyecto in P} # Se crea un diccionario con listas vacías para cada proyecto
 
 #Para cada proyecto queremos agregar la banda donde esta y la franja horaria donde inicia y termina
 
-for i in P: # Para cada proyecto i
-    for h in H: # Para cada franja horaria h
-        for b in B: # Para cada banda b
-            if lp.value(x[i, h, b]) == 1: # Si el proyecto i inicia en la banda b durante la franja horaria h
-                resultados[i] = {"banda": b, "inicio": h, "fin": d[i]+h-1} # Se agrega la banda y la franja horaria de inicio y fin al diccionario del proyecto i
+for proyecto in P: # Para cada proyecto
+    for franja in H: # Para cada franja horaria
+        for banda in B: # Para cada banda
+            if lp.value(x[proyecto, franja, banda]) == 1: # Si el proyecto inicia en la banda durante la franja horaria
+                resultados_proyectos[proyecto] = {"banda": banda, "inicio": franja, "fin": d[proyecto]+franja-1} # Se agrega la banda y la franja horaria de inicio y fin al diccionario del proyecto
 
-# Obtener el mapa de colores 'tab20b'
-cmap = plt.get_cmap('tab20b')
-
-# Crear una lista de colores oscuros
-colores_oscuros = [cmap(i) for i in np.linspace(0, 1, len(P))] # Se crea una lista de colores oscuros para cada proyecto
-
+# Obtener el mapa de colores 'Set2'
+cmap = plt.get_cmap('Set2')
+# Crear una lista de colores claros
+colores_claros = [cmap(i) for i in np.linspace(0, 1, len(P))] # Se crea una lista de colores claros para cada proyecto
 # Crear un diccionario de colores para cada proyecto
-colores = {proyecto: color for proyecto, color in zip(P, colores_oscuros)} # Se crea un diccionario de colores para cada proyecto
+colores = {proyecto: color for proyecto, color in zip(P, colores_claros)} # Se crea un diccionario de colores para cada proyecto
 
-fig, axs = plt.subplots(1, len(B), figsize=(20, 15)) # Se crea una figura con un subgráfico para cada banda
-fig.subplots_adjust(bottom= 0.2, wspace = 1.5) # Se ajusta la posición de los subgráficos
-fig.suptitle("Programación - Bandas Transportadoras", fontsize=16, fontweight='bold') # Se agrega un título a la figura
+fig, axs = plt.subplots(1, len(B), figsize=(20, 20)) # Se crea una figura con un subgráfico para cada banda
+fig.subplots_adjust(bottom= 0.2, wspace = 2) # Se ajusta la posición de los subgráficos
+fig.suptitle("Programación de Bandas Transportadoras", fontsize=20, fontweight='bold') # Se agrega un título a la figura
 
 # Cambiar el color de fondo de la figura
-fig.set_facecolor('lightgray')
+fig.set_facecolor('lightblue')
 
-for b in B: # Para cada banda b
-    ax = axs[b-1] # Se selecciona el subgráfico correspondiente a la banda b
-    handles = [] # Se crea una lista vacía para los manejadores de las leyendas
-    labels = [] # Se crea una lista vacía para las etiquetas de las leyendas
-    for i in P: # Para cada proyecto i
-        if resultados[i]["banda"] == b: # Si el proyecto i se ejecuta en la banda b
-            bar = ax.bar(resultados[i]["banda"], d[i], bottom=resultados[i]["inicio"], color=colores[i], width=0.5) # Se grafica el proyecto i en el subgráfico de la banda b con una anchura de 0.5
-            handles.append(bar) # Se agrega el manejador de la barra a la lista de manejadores
-            labels.append(i) # Se agrega el nombre del proyecto a la lista de etiquetas
+for banda in B: # Para cada banda
+    ax = axs[banda-1] # Se selecciona el subgráfico correspondiente a la banda
+    elementos = [] # Se crea una lista vacía para los elementos de las leyendas
+    detalles = [] # Se crea una lista vacía para las detalles de las leyendas
+    for proyecto in P: # Para cada proyecto
+        if resultados_proyectos[proyecto]["banda"] == banda: # Si el proyecto se ejecuta en la banda
+            barra = ax.bar(resultados_proyectos[proyecto]["banda"], d[proyecto], bottom=resultados_proyectos[proyecto]["inicio"], color=colores[proyecto], width=0.5) # Se grafica el proyecto en el subgráfico de la banda con una anchura de 0.5
+            elementos.append(barra) # Se agrega el elemento de la barra a la lista de manejadores
+            detalles.append(proyecto) # Se agrega el nombre del proyecto a la lista de etiquetas
 
-    ax.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.25)) # Se muestra la leyenda en la parte inferior del subgráfico de la banda b
-    ax.set_xticks([b]) # Se establece la marca en el eje x para la banda b
-    ax.set_xticklabels([f"Banda {b}"], weight="bold") # Se establece la etiqueta en el eje x para la banda b
-    ax.xaxis.tick_top() # Se eliminan las marcas en el eje x
-    ax.set_yticks(np.arange(0, 11))  # Agregar marcas en el eje y para todas las franjas horarias, incluyendo un espacio antes de la primera
-
+    #EJE Y (FRANJAS)
     # Crear una lista de etiquetas para las marcas en el eje y, incluyendo un espacio antes de la primera y eliminando el '10'
     # Las etiquetas son las horas correspondientes a cada franja horaria
-    yticklabels = [""] + [f"{i+7}:00 AM ({i})" if i < 5 else f"{i-5+12}:00 PM ({i})" for i in range(1, 10)] + [""] # Se crea una lista de etiquetas para las marcas en el eje y
-
-    ax.set_yticklabels(yticklabels)  # Establecer las etiquetas de las marcas en el eje y
+    etiquetas_franjas = [""] + [f"{franja+6}:00 AM ({franja})" if franja < 6 else f"{franja-6+12}:00 PM ({franja})" for franja in range(1, 10)] + ["16:00 PM     "] # Se crea una lista de etiquetas para las marcas en el eje y
+    ax.set_yticklabels(etiquetas_franjas)  # Establecer las etiquetas de las marcas en el eje y
     ax.invert_yaxis() # Invertir el eje y
     ax.set_ylabel("Franja", labelpad=15, weight='bold') # Establecer la etiqueta del eje y
+    
+    #EJE X (BANDAS)
+    ax.set_xticks([banda]) # Se establece la marca en el eje x para la banda
+    ax.set_xticklabels([f"Banda {banda}"], weight="bold") # Se establece la etiqueta en el eje x para la banda
+    ax.xaxis.tick_top() # Se eliminan las marcas en el eje x
+    ax.set_yticks(np.arange(0, 11))  # Agregar marcas en el eje y para todas las franjas horarias, incluyendo un espacio antes de la primera
+    ax.legend(elementos, detalles, loc='lower center', bbox_to_anchor=(0.5, -0.25)) # Se muestra la leyenda en la parte inferior del subgráfico de la banda
+
 
 plt.show() # Mostrar la figura
