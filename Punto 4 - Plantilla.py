@@ -1,35 +1,10 @@
+
+#Integrantes - c.molinap, caperezc1
+
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
-
-"""i) Variables de decisión
-(x′, y′): Coordenadas actuales del radar.
-(x,y):Coordenadas potenciales para el nuevo punto de búsqueda
-
-
-ii) Función objetivo
-Minimizar ϕ(x′, y′)
-
-Este es el índice de densidad de personas en el punto (x,y). La función está dada por ϕ(x, y) = 100 * (x2+y-11)2+100 * (x+y2-7)2
-
-iii) Restricciones
-
-Restricción i. “El límite occidental del área de búsqueda”
-x -6
-
-Restricción ii. “El límite oriental del área de búsqueda”
-x6
-
-Restricción iii. “El límite sur del área de búsqueda”
-y -6
-
-Restricción iv. “El límite norte del área de búsqueda”
-y6
-
-Restricción v. “Una restricción lineal que representa un límite adicional dentro del área de búsqueda que debe ser satisfecho”
-x+y6
-"""
 
 #################################################
 ########## Implementación de funciones ##########

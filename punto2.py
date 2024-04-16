@@ -1,7 +1,7 @@
 
+#Integrantes - c.molinap, caperezc1
+
 import pulp as lp # Importación de la librería pulp para resolver problemas de programación lineal
-
-
 
     #Conjuntos
 

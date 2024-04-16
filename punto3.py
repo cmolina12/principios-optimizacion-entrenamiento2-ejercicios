@@ -1,4 +1,6 @@
 
+#Integrantes - c.molinap, caperezc1
+
 import pulp as lp # Importar la librería pulp
 
     #Conjuntos
@@ -206,4 +208,4 @@ for b in B: # Para cada banda b
     ax.invert_yaxis() # Invertir el eje y
     ax.set_ylabel("Franja", labelpad=15, weight='bold') # Establecer la etiqueta del eje y
 
-plt.show()
+plt.show() # Mostrar la figura

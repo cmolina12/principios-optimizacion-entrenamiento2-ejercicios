@@ -1,4 +1,5 @@
 
+#Integrantes - c.molinap, caperezc1
 
 import pulp as lp # Importar la librería PuLP
 
