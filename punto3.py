@@ -166,7 +166,7 @@ for i in P: # Para cada proyecto i
             if lp.value(x[i, h, b]) == 1: # Si el proyecto i inicia en la banda b durante la franja horaria h
                 resultados[i] = {"banda": b, "inicio": h, "fin": d[i]+h-1} # Se agrega la banda y la franja horaria de inicio y fin al diccionario del proyecto i
 
-# Obtener el mapa de colores 'tab20'
+# Obtener el mapa de colores 'tab20b'
 cmap = plt.get_cmap('tab20b')
 
 # Crear una lista de colores oscuros
@@ -176,7 +176,7 @@ colores_oscuros = [cmap(i) for i in np.linspace(0, 1, len(P))] # Se crea una lis
 colores = {proyecto: color for proyecto, color in zip(P, colores_oscuros)} # Se crea un diccionario de colores para cada proyecto
 
 fig, axs = plt.subplots(1, len(B), figsize=(20, 15)) # Se crea una figura con un subgráfico para cada banda
-fig.subplots_adjust(bottom= 0.2, wspace = 0.5) # Se ajusta la posición de los subgráficos
+fig.subplots_adjust(bottom= 0.2, wspace = 1.5) # Se ajusta la posición de los subgráficos
 fig.suptitle("Programación - Bandas Transportadoras", fontsize=16, fontweight='bold') # Se agrega un título a la figura
 
 # Cambiar el color de fondo de la figura
@@ -194,12 +194,16 @@ for b in B: # Para cada banda b
 
     ax.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.25)) # Se muestra la leyenda en la parte inferior del subgráfico de la banda b
     ax.set_xticks([b]) # Se establece la marca en el eje x para la banda b
-    ax.set_xticklabels([f"Banda {b}"]) # Se establece la etiqueta en el eje x para la banda b
+    ax.set_xticklabels([f"Banda {b}"], weight="bold") # Se establece la etiqueta en el eje x para la banda b
     ax.xaxis.tick_top() # Se eliminan las marcas en el eje x
     ax.set_yticks(np.arange(0, 11))  # Agregar marcas en el eje y para todas las franjas horarias, incluyendo un espacio antes de la primera
-    yticklabels = [""] + [str(i) for i in range(1, 10)] + [""] # Crear una lista de etiquetas para las marcas en el eje y, incluyendo un espacio antes de la primera y eliminando el '10'
+
+    # Crear una lista de etiquetas para las marcas en el eje y, incluyendo un espacio antes de la primera y eliminando el '10'
+    # Las etiquetas son las horas correspondientes a cada franja horaria
+    yticklabels = [""] + [f"{i+7}:00 AM ({i})" if i < 5 else f"{i-5+12}:00 PM ({i})" for i in range(1, 10)] + [""] # Se crea una lista de etiquetas para las marcas en el eje y
+
     ax.set_yticklabels(yticklabels)  # Establecer las etiquetas de las marcas en el eje y
     ax.invert_yaxis() # Invertir el eje y
-    ax.set_ylabel("Franjas horarias") # Se establece la etiqueta del eje y
+    ax.set_ylabel("Franja", labelpad=15, weight='bold') # Establecer la etiqueta del eje y
 
 plt.show()
