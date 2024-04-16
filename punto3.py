@@ -167,8 +167,8 @@ for proyecto in P: # Para cada proyecto
             if lp.value(x[proyecto, franja, banda]) == 1: # Si el proyecto inicia en la banda durante la franja horaria
                 resultados_proyectos[proyecto] = {"banda": banda, "inicio": franja, "fin": d[proyecto]+franja-1} # Se agrega la banda y la franja horaria de inicio y fin al diccionario del proyecto
 
-# Obtener el mapa de colores 'Set2'
-cmap = plt.get_cmap('Set2')
+# Obtener el mapa de colores 'Set3'
+cmap = plt.get_cmap('Set3')
 # Crear una lista de colores claros
 colores_claros = [cmap(i) for i in np.linspace(0, 1, len(P))] # Se crea una lista de colores claros para cada proyecto
 # Crear un diccionario de colores para cada proyecto
